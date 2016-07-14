@@ -9,7 +9,7 @@ If you have any questions, feel free to contact us at support@regulaforensics.co
 * [Additional information](#additional_information)
 
 ## <a name="how_to_build_demo_application"></a> How to build demo application
-1. Get trial license for demo application at licensing.regulaforensics.com (`regula.license` file).
+1. Get trial license for demo application at <a target="_blank" href="https://licensing.regulaforensics.com">licensing.regulaforensics.com</a> (`regula.license` file).
 1. Clone current repository using command `git clone https://github.com/regulaforensics/RegulaDocumentReader-iOS.git`.
 1. Download and install lates [Xcode](https://developer.apple.com/xcode/download).
 1. Download latest [DocumentReader.framework](https://github.com/regulaforensics/RegulaDocumentReader-iOS/releases) and copy it to `RegulaDocumentReader` folder.
