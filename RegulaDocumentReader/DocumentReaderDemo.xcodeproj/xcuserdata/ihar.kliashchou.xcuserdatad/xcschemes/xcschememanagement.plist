@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>DocumentReader.xcscheme</key>
+		<key>DocumentReaderDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -13,16 +13,6 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>318006881CC4F88A001B3CB7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>3180069C1CC4F88A001B3CB7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>318006A71CC4F88A001B3CB7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

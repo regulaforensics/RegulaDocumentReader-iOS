@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/administratorregula/Desktop/RegulaDocumentReader-iOS/DocumentReader/DocumentReaderDemo.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>
