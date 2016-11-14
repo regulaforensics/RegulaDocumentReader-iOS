@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 
 class MRZReader {
-    private static let mrzDetector = MRZDetectorIOS()
-    private static var licenseSet = false;
+    fileprivate static let mrzDetector = MRZDetectorIOS()
+    fileprivate static var licenseSet = false;
     
     static var outputMrzImage: UIImage? = nil
     static var outputMrzCoord: NSMutableArray? = nil
     static var outputMrzXml: NSString? = nil
     
-    static func processMRZ(inImage: UIImage, inputIsSingleImage: Bool = true) -> Bool {
+    static func processMRZ(_ inImage: UIImage, inputIsSingleImage: Bool = true) -> Bool {
         checkLicense() // License checked only once
         var res = false
         mrzDetector.detectMRZ(inImage, outputMRZImage: &outputMrzImage, outputMRZCoords: &outputMrzCoord, outputXML: &outputMrzXml, writeDebugInfo: false, inputIsSingleImage: inputIsSingleImage)
@@ -28,16 +28,16 @@ class MRZReader {
         //}
         return res
     }
-
-    private static func readLicense() -> NSData? {
-        if let licenseFilePath = NSBundle.mainBundle().pathForResource("regula.license", ofType: nil) {
-            let licenseData = NSData(contentsOfFile: licenseFilePath)
+    
+    fileprivate static func readLicense() -> Data? {
+        if let licenseFilePath = Bundle.main.path(forResource: "regula.license", ofType: nil) {
+            let licenseData = try? Data(contentsOf: URL(fileURLWithPath: licenseFilePath))
             return licenseData
         }
         return nil
     }
     
-    private static func checkLicense() {
+    fileprivate static func checkLicense() {
         if licenseSet {
             return;
         }

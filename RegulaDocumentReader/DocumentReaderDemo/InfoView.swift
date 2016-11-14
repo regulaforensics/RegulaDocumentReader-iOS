@@ -10,31 +10,31 @@ import UIKit
 import MessageUI
 
 class InfoView: UIViewController, MFMailComposeViewControllerDelegate {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
-
-    @IBAction func openLinkedIn(sender: AnyObject) {
-        let urlWeb = NSURL(string: "https://www.linkedin.com/company/1653568")
-        if UIApplication.sharedApplication().canOpenURL(urlWeb!){
-                UIApplication.sharedApplication().openURL(urlWeb!)
+    
+    @IBAction func openLinkedIn(_ sender: AnyObject) {
+        let urlWeb = URL(string: "https://www.linkedin.com/company/1653568")
+        if UIApplication.shared.canOpenURL(urlWeb!){
+            UIApplication.shared.openURL(urlWeb!)
         }
-
+        
     }
-    @IBAction func openWebsite(sender: AnyObject) {
-        let urlWeb = NSURL(string: "http://www.regulaforensics.com")
-        if UIApplication.sharedApplication().canOpenURL(urlWeb!){
-            UIApplication.sharedApplication().openURL(urlWeb!)
+    @IBAction func openWebsite(_ sender: AnyObject) {
+        let urlWeb = URL(string: "http://www.regulaforensics.com")
+        if UIApplication.shared.canOpenURL(urlWeb!){
+            UIApplication.shared.openURL(urlWeb!)
         }
-
+        
     }
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
@@ -48,50 +48,50 @@ class InfoView: UIViewController, MFMailComposeViewControllerDelegate {
         return mailComposerVC
     }
     
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func sendMail(sender: AnyObject) {
+    @IBAction func sendMail(_ sender: AnyObject) {
         let mailComposeViewController = configuredMailComposeViewController()
         if MFMailComposeViewController.canSendMail() {
-            self.presentViewController(mailComposeViewController, animated: true, completion: nil)
+            self.present(mailComposeViewController, animated: true, completion: nil)
         }
     }
     
-    @IBAction func openTWITTER(sender: AnyObject) {
-        let urlApp = NSURL(string: "twitter://user?screen_name=regulaforensics")
-        let urlWeb = NSURL(string: "https://twitter.com/regulaforensics")
-        if UIApplication.sharedApplication().canOpenURL(urlApp!){
-            UIApplication.sharedApplication().openURL(urlApp!)
+    @IBAction func openTWITTER(_ sender: AnyObject) {
+        let urlApp = URL(string: "twitter://user?screen_name=regulaforensics")
+        let urlWeb = URL(string: "https://twitter.com/regulaforensics")
+        if UIApplication.shared.canOpenURL(urlApp!){
+            UIApplication.shared.openURL(urlApp!)
         }
         else
-            if UIApplication.sharedApplication().canOpenURL(urlWeb!){
-                UIApplication.sharedApplication().openURL(urlWeb!)
+            if UIApplication.shared.canOpenURL(urlWeb!){
+                UIApplication.shared.openURL(urlWeb!)
         }
-
+        
     }
     
-    @IBAction func openFB(sender: AnyObject) {
-        let urlApp = NSURL(string: "fb://profile/356561294452774")
-        let urlWeb = NSURL(string: "https://www.facebook.com/regulaforensics")
-        if UIApplication.sharedApplication().canOpenURL(urlApp!){
-            UIApplication.sharedApplication().openURL(urlApp!)
+    @IBAction func openFB(_ sender: AnyObject) {
+        let urlApp = URL(string: "fb://profile/356561294452774")
+        let urlWeb = URL(string: "https://www.facebook.com/regulaforensics")
+        if UIApplication.shared.canOpenURL(urlApp!){
+            UIApplication.shared.openURL(urlApp!)
         }
         else
-            if UIApplication.sharedApplication().canOpenURL(urlWeb!){
-                UIApplication.sharedApplication().openURL(urlWeb!)
+            if UIApplication.shared.canOpenURL(urlWeb!){
+                UIApplication.shared.openURL(urlWeb!)
         }
         
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

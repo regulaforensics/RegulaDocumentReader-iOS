@@ -392,7 +392,7 @@ enum FieldTypes: Int {
 
 class FieldHelper {
     
-    static func fieldNameByType(fieldType: FieldTypes) -> String{
+    static func fieldNameByType(_ fieldType: FieldTypes) -> String{
         var text: String!
         switch(fieldType){
         case FieldTypes.ft_Document_Class_Code: text = "Document Class Code"

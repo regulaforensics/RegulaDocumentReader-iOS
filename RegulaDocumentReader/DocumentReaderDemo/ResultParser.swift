@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ParseResult: NSObject, NSXMLParserDelegate {
+class ParseResult: NSObject, XMLParserDelegate {
     
     var xmlValue: String? = nil
     var fields = [TextField]()
@@ -16,8 +16,8 @@ class ParseResult: NSObject, NSXMLParserDelegate {
     
     func parseXMLToFields() -> [TextField]{
         fields.removeAll()
-        if let data = xmlValue?.dataUsingEncoding(NSUTF8StringEncoding){
-            let parser = NSXMLParser(data: data)
+        if let data = xmlValue?.data(using: String.Encoding.utf8){
+            let parser = XMLParser(data: data)
             parser.delegate = self
             parser.parse()
             OverallResult = nil
@@ -37,7 +37,7 @@ class ParseResult: NSObject, NSXMLParserDelegate {
     var fValue = String()
     var fStatus = String()
     
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         element = elementName
         if element == "Document_Text_Data_Field" {
             fType = ""
@@ -46,13 +46,13 @@ class ParseResult: NSObject, NSXMLParserDelegate {
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
         switch (element)
         {
         case "wFieldType":
             fType = string
         case "Buf_Text":
-            fValue += string.stringByReplacingOccurrencesOfString("^", withString: "\n")
+            fValue += string.replacingOccurrences(of: "^", with: "\n")
         case "Validity":
             fStatus = string
         default:
@@ -60,11 +60,11 @@ class ParseResult: NSObject, NSXMLParserDelegate {
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "Document_Text_Data_Field" {
             fields.append(TextField(name: fType, value: fValue, status: Int(fStatus)!))
         }
         element = ""
     }
-
+    
 }
