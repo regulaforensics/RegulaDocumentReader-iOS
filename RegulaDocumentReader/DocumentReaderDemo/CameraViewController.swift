@@ -114,11 +114,11 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let orientation = UIDevice.current.orientation
         var t: CGAffineTransform!
         if orientation == UIDeviceOrientation.portrait {
-            t = CGAffineTransform(rotationAngle: CGFloat(-M_PI / 2.0))
+            t = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2.0))
         } else if orientation == UIDeviceOrientation.portraitUpsideDown {
-            t = CGAffineTransform(rotationAngle: CGFloat(M_PI / 2.0))
+            t = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
         } else if (orientation == UIDeviceOrientation.landscapeRight) {
-            t = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+            t = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
         } else {
             t = CGAffineTransform(rotationAngle: 0)
         }

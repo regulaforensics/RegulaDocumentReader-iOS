@@ -42,7 +42,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if segue.identifier == "showDetailsFromGallery"{
             let controller = segue.destination as! DetailsViewController
             controller.croppedMRZImage = MRZReader.outputMrzImage
-            controller.xmlValue = MRZReader.outputMrzXml as? String
+            controller.xmlValue = MRZReader.outputMrzXml as String?
         }
     }
     
