@@ -182,7 +182,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         if segue.identifier == "showDetails"{
             let controller = segue.destination as! DetailsViewController
             controller.croppedMRZImage = MRZReader.outputMrzImage
-            controller.xmlValue = MRZReader.outputMrzXml as? String
+            controller.xmlValue = MRZReader.outputMrzXml as String?
         }
     }
     
@@ -283,7 +283,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         catch _ {}
         
         if err != nil {
-            print("error: \(err?.localizedDescription)")
+            print("error: \(String(describing: err?.localizedDescription))")
         }
         
         initOutput()
