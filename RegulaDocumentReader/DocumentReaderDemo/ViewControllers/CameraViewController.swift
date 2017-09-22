@@ -23,8 +23,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     var pauseProcessing: Bool = false
     var flashON: Bool = false
-    
-    
+
+
+    @IBAction func actionClose(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @IBAction func startCapture(){
         captureSession.startRunning()
     }
@@ -33,8 +37,8 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     @IBAction func stopCapture(_ sender: AnyObject) {
         captureSession.stopRunning()
     }
-    
-    @IBOutlet weak var bFlashButton: UIBarButtonItem!
+
+    @IBOutlet weak var bFlashButton: UIButton!
     @IBAction func bFlash(_ sender: AnyObject) {
         flashON = !flashON
         do{
@@ -42,14 +46,14 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                 if (flashON && cd.isTorchModeSupported(AVCaptureTorchMode.on)){
                     try cd.lockForConfiguration()
                     cd.torchMode = AVCaptureTorchMode.on
-                    bFlashButton.image = UIImage(named: "flashOn.png");
+                    bFlashButton.setImage(UIImage(named: "flashOn.png"), for: .normal)
                     cd.unlockForConfiguration()
                 }
                 else
                     if (!flashON && cd.isTorchModeSupported(AVCaptureTorchMode.off)){
                         try cd.lockForConfiguration()
                         cd.torchMode = AVCaptureTorchMode.off
-                        bFlashButton.image = UIImage(named: "flashOff.png");
+                        bFlashButton.setImage(UIImage(named: "flashOff.png"), for: .normal)
                         cd.unlockForConfiguration()
                 }
             }

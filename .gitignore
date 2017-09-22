@@ -1,3 +1,4 @@
 *.framework
 *.license
 .DS_Store
+RegulaDocumentReader/Build

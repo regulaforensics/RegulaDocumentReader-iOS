@@ -21,11 +21,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func unwindToMainView(_ segue: UIStoryboardSegue) {
-        
-    }
-    
+
+
     @IBAction func openGallery(_ sender: AnyObject) {
         let imagePicker = UIImagePickerController()
         
