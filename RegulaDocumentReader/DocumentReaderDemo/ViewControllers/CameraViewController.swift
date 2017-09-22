@@ -43,16 +43,16 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         flashON = !flashON
         do{
             if let cd = captureDevice {
-                if (flashON && cd.isTorchModeSupported(AVCaptureTorchMode.on)){
+                if (flashON && cd.isTorchModeSupported(AVCaptureDevice.TorchMode.on)){
                     try cd.lockForConfiguration()
-                    cd.torchMode = AVCaptureTorchMode.on
+                    cd.torchMode = AVCaptureDevice.TorchMode.on
                     bFlashButton.setImage(UIImage(named: "flashOn.png"), for: .normal)
                     cd.unlockForConfiguration()
                 }
                 else
-                    if (!flashON && cd.isTorchModeSupported(AVCaptureTorchMode.off)){
+                    if (!flashON && cd.isTorchModeSupported(AVCaptureDevice.TorchMode.off)){
                         try cd.lockForConfiguration()
-                        cd.torchMode = AVCaptureTorchMode.off
+                        cd.torchMode = AVCaptureDevice.TorchMode.off
                         bFlashButton.setImage(UIImage(named: "flashOff.png"), for: .normal)
                         cd.unlockForConfiguration()
                 }
@@ -67,12 +67,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     func stopProcessing(){
         pauseProcessing = true
-        previewLayer?.connection.isEnabled = false
+        previewLayer?.connection?.isEnabled = false
     }
     
     func startProcessing(){
         pauseProcessing = false
-        previewLayer?.connection.isEnabled = true
+        previewLayer?.connection?.isEnabled = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,18 +90,18 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        captureSession.sessionPreset = AVCaptureSessionPresetHigh
+        captureSession.sessionPreset = AVCaptureSession.Preset.high
         processQueue = DispatchQueue(label: "processQueue", attributes: [])
         
         let devices = AVCaptureDevice.devices()
         
         // Loop through all the capture devices on this phone
-        for device in devices! {
+        for device in devices {
             // Make sure this particular device supports video
-            if ((device as AnyObject).hasMediaType(AVMediaTypeVideo)) {
+            if ((device as AnyObject).hasMediaType(AVMediaType.video)) {
                 // Finally check the position and confirm we've got the back camera
-                if((device as AnyObject).position == AVCaptureDevicePosition.back) {
-                    captureDevice = device as? AVCaptureDevice
+                if((device as AnyObject).position == AVCaptureDevice.Position.back) {
+                    captureDevice = device
                     initDevice()
                     initSession()
                     captureSession.startRunning()
@@ -126,7 +126,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         } else {
             t = CGAffineTransform(rotationAngle: 0)
         }
-        outputImage = outputImage!.applying(t)
+        outputImage = outputImage!.transformed(by: t)
         let imageContext = CIContext(options: nil)
         
         let cgim = imageContext.createCGImage(outputImage!, from: outputImage!.extent)
@@ -136,7 +136,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     
     @IBAction func focusOnTap(_ sender: AnyObject) {
-        if let point = previewLayer?.captureDevicePointOfInterest(for: tapRecognizer.location(in: self.view)){
+        if let point = previewLayer?.captureDevicePointConverted(fromLayerPoint: tapRecognizer.location(in: self.view)){
             focus(point, continuousAuto: false)
         }
         
@@ -144,22 +144,22 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     
     func focus(_ devicePoint: CGPoint, continuousAuto: Bool){
         if let cd = captureDevice{
-            var focusMode: AVCaptureFocusMode
+            var focusMode: AVCaptureDevice.FocusMode
             
             if continuousAuto{
-                focusMode = AVCaptureFocusMode.continuousAutoFocus
+                focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
             }
             else{
-                focusMode = AVCaptureFocusMode.autoFocus
+                focusMode = AVCaptureDevice.FocusMode.autoFocus
             }
             
-            var exposureMode: AVCaptureExposureMode
+            var exposureMode: AVCaptureDevice.ExposureMode
             
             if continuousAuto{
-                exposureMode = AVCaptureExposureMode.continuousAutoExposure
+                exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
             }
             else{
-                exposureMode = AVCaptureExposureMode.autoExpose
+                exposureMode = AVCaptureDevice.ExposureMode.autoExpose
             }
             
             
@@ -189,11 +189,9 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             controller.xmlValue = MRZReader.outputMrzXml as String?
         }
     }
-    
-    
-    func captureOutput(_ captureOutput: AVCaptureOutput!,
-                       didOutputSampleBuffer sampleBuffer: CMSampleBuffer!,
-                       from connection: AVCaptureConnection!)
+
+
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
     {
         if let cd = captureDevice{
             if !pauseProcessing && !cd.isAdjustingFocus && !cd.isAdjustingExposure && !cd.isAdjustingWhiteBalance {
@@ -207,13 +205,13 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                             self.performSegue(withIdentifier: "showDetails", sender: self)
                         }
                     })
-                    
+
                 }
             }
         }
     }
-    
-    func subjectAreaDidChange(_ notification: Notification) {
+
+    @objc func subjectAreaDidChange(_ notification: Notification) {
         let devicePoint : CGPoint = CGPoint(x: 0.5, y: 0.5)
         self.focus(devicePoint, continuousAuto: true)
     }
@@ -233,7 +231,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         
         //setup delegate
         videoOutput.setSampleBufferDelegate(self, queue: captureQueue)
-        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable: Int(kCVPixelFormatType_32BGRA)]
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: Int(kCVPixelFormatType_32BGRA)]
         
         if captureSession.canAddOutput(videoOutput as AVCaptureOutput){
             captureSession.addOutput(videoOutput as AVCaptureOutput)}
@@ -245,25 +243,25 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             
             do {
                 try cd.lockForConfiguration()
-                if cd.isFocusModeSupported(AVCaptureFocusMode.continuousAutoFocus){
-                    cd.focusMode = AVCaptureFocusMode.continuousAutoFocus
+                if cd.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus){
+                    cd.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
                 }
                 
                 if cd.isSmoothAutoFocusSupported
                 {cd.isSmoothAutoFocusEnabled = true}
                 
                 if cd.isAutoFocusRangeRestrictionSupported{
-                    cd.autoFocusRangeRestriction = AVCaptureAutoFocusRangeRestriction.near
+                    cd.autoFocusRangeRestriction = AVCaptureDevice.AutoFocusRangeRestriction.near
                 }
                 
                 bFlashButton.isEnabled = cd.hasTorch && cd.isTorchAvailable
                 
-                if cd.isExposureModeSupported(AVCaptureExposureMode.continuousAutoExposure){
-                    cd.exposureMode = AVCaptureExposureMode.continuousAutoExposure
+                if cd.isExposureModeSupported(AVCaptureDevice.ExposureMode.continuousAutoExposure){
+                    cd.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
                 }
                 
-                if cd.isWhiteBalanceModeSupported(AVCaptureWhiteBalanceMode.continuousAutoWhiteBalance){
-                    cd.whiteBalanceMode = AVCaptureWhiteBalanceMode.continuousAutoWhiteBalance
+                if cd.isWhiteBalanceModeSupported(AVCaptureDevice.WhiteBalanceMode.continuousAutoWhiteBalance){
+                    cd.whiteBalanceMode = AVCaptureDevice.WhiteBalanceMode.continuousAutoWhiteBalance
                 }
                 
                 cd.activeVideoMaxFrameDuration = CMTimeMake(1, 30)
@@ -282,7 +280,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         let err : NSError? = nil
         
         do{
-            captureSession.addInput(try AVCaptureDeviceInput(device: captureDevice))
+            captureSession.addInput(try AVCaptureDeviceInput(device: captureDevice!))
         }
         catch _ {}
         
@@ -294,7 +292,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         self.view.layer.insertSublayer(previewLayer!, at: 0)
         previewLayer?.frame = self.view.bounds
-        previewLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+        previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
     }
     
 }
